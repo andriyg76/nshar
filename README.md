@@ -52,9 +52,9 @@ Makeself itself is covered by the [GNU General Public License][8] (GPL) version 
 
 ## Download
 
-The latest development version can be grabbed from [GitHub][10].
+The latest development version can be grabbed from [GitHub].
 
 ## Version history
 
-  * **v0.1:** Initial public rename, fork from
+  * **v0.1:** Initial public rename, fork from https://github.com/megastep/makeself
 
