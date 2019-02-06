@@ -29,12 +29,9 @@ nshar [args --] list of files or dirs
     * **`--xz`** : Use xz instead of gzip for better compression. The xz command must be available in the command path. 
     * **`--compress`** : Use the UNIX `compress` command to compress the data. This should be the default on all platforms that don't have gzip available.
     * **`--nocomp`** : Do not use any compression for the archive, which will then be an uncompressed TAR.
-    * **`--complevel`** : Specify the compression level for gzip, bzip2, pbzip2, xz, lzo or lz4. (defaults to 9)
     * **`--uuencode`** : Encode the archive to ASCII in uuencode/decode format (default format is base64).
     * **`--compat`** : Encode archive in uuencode/decode, compress with compress. 
     * **`--follow`** : Follow the symbolic links inside of the archive directory, i.e. store the files that are being pointed to instead of the links themselves.
-    * **`--nooverwrite`** : Do not extract the archive if the specified target directory already exists.
-
 
 ## Startup Script
 
