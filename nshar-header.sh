@@ -1,17 +1,8 @@
-cat << EOF  > "$archname"
-#!/bin/sh
-# This script was generated using Makeself $MS_VERSION
-# The license covering this archive and its contents, if any, is wholly independent of the Makeself license (GPL)
+cat << EOF
+#!/bin/sh -e
+# This script was generated using $COMMAND $VERSION
+# The license covering this archive and its contents, if any, is wholly independent of the $COMMAND license (GPL)
 
-ORIG_UMASK=\`umask\`
-if test "$KEEP_UMASK" = n; then
-    umask 077
-fi
-
-CRCsum="$CRCsum"
-MD5="$MD5sum"
-SHA="$SHAsum"
-TMPROOT=\${TMPDIR:=/tmp}
 USER_PWD="\$PWD"; export USER_PWD
 
 label="$LABEL"
@@ -348,7 +339,7 @@ do
 cat << EOLSM
 EOF
 eval "$LSM_CMD"
-cat << EOF  >> "$archname"
+cat << EOF
 EOLSM
 	exit 0
 	;;
