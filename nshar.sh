@@ -1,19 +1,16 @@
 #!/bin/sh
 #
-# Makeself version 2.3.x
-#  by Stephane Peter <megastep@megastep.org>
+# nshar 0.1
+#  by Andriy Gushuley <andriyg@icloud.com>
 #
-# Utility to create self-extracting tar.gz archives.
-# The resulting archive is a file holding the tar.gz archive with
-# a small Shell script stub that uncompresses the archive to a temporary
-# directory and then executes a given script from withing that directory.
+# Utility to create self-extracting archives, which can be passed by plaintext, or by.
+# The resulting archive is a script file holding extracting part and encoded by text packed tar
+# with payload.
 #
-# Makeself home page: http://makeself.io/
-#
-# Version 2.0 is a rewrite of version 1.0 to make the code easier to read and maintain.
+# Makeself home page: http://nshar.io/
 #
 # Version history :
-# - 0.01: Initial public release, rename and simplify
+# - 0.01: Initial public release, rename makeself to nshar and simplify
 #
 # (C) 2019 By Andriy Gushuley <andriyg@icloud.com>
 #   based on Makeself (C) 1998-2018 by Stephane Peter <megastep@megastep.org>
@@ -39,21 +36,23 @@ fi
 
 usage()
 {
-    echo "Usage: $0 [args --] list of files or dirs"
-    echo "params can be one or more of the following :"
-    echo "    --version | -v     : Print out Makeself version number and exit"
-    echo "    --help | -h        : Print out this help message"
-    echo "    --quiet | -q       : Do not print any messages other than errors."
-    echo "    --gzip             : Compress using gzip (default if detected)"
-    echo "    --compress         : Compress using the UNIX 'compress' command (default if gzip is not detected)"
-    echo "    --nocomp           : Do not compress the data"
-    echo "    --bzip2            : Compress using bzip2 instead of gzip"
-    echo "    --xz               : Compress using xz instead of gzip"
-    echo "    --base64           : Encode tar using base64 (default if base64 detected)"
-    echo "    --uuencode         : Encode tar using uuencode (default if base64 not detected)"
-    echo "    --compat           : Encode archive in uuencode/decode, compress with UNIX 'compress'"
-    echo "    --follow           : Follow the symlinks in the archive"
-    echo
+    cat << __USAGE__ >&2
+Usage: $0 [args --] list of files or dirs
+        params can be one or more of the following :
+    --version | -v     : Print out Makeself version number and exit
+    --help | -h        : Print out this help message
+    --quiet | -q       : Do not print any messages other than errors.
+    --gzip             : Compress using gzip (default if detected)
+    --compress         : Compress using the UNIX 'compress' command (default if gzip is not detected)
+    --nocomp           : Do not compress the data
+    --bzip2            : Compress using bzip2 instead of gzip
+    --xz               : Compress using xz instead of gzip
+    --base64           : Encode tar using base64 (default if base64 detected)
+    --uuencode         : Encode tar using uuencode (default if base64 not detected)
+    --compat           : Encode archive in uuencode/decode, compress with UNIX 'compress'
+    --follow           : Follow the symlinks in the archive
+    
+__USAGE__
     exit 1
 }
 
@@ -72,9 +71,7 @@ HEADER=`dirname "$0"`/nshar-header.sh
 TARGETDIR=""
 DATE=`LC_ALL=C date`
 ENCODE=base64
-
-# LSM file stuff
-LSM_CMD="echo No LSM."
+__EOF_MARK__=__END_OF_ARCHIVE__
 
 while true
 do
@@ -107,6 +104,10 @@ do
 	ENCODE=uuencode
 	shift
 	;;
+	--compat)
+	ENCODE=uuencode
+	COMPRESS=Unix
+	;;
     --nocomp)
 	COMPRESS=none
 	shift
@@ -118,7 +119,7 @@ do
     -h | --help)
 	usage
 	;;
-    -*)
+    -*|--*)
 	echo Unrecognized flag : "$1"
 	usage
 	;;
@@ -200,3 +201,4 @@ fi
     echo "ERROR: failed to archive files: $SCRIPTARGS" >&2
     exit 1
 }
+echo $__EOF_MARK__
