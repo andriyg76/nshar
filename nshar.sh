@@ -46,6 +46,8 @@ Usage: $0 [args --] list of files or dirs
     --compress         : Compress using the UNIX 'compress' command (default if gzip is not detected)
     --nocomp           : Do not compress the data
     --bzip2            : Compress using bzip2 instead of gzip
+    --tar-extra        : Additional parameters for tar packager
+    --exclude          : Exclude files of dirs
     --xz               : Compress using xz instead of gzip
     --base64           : Encode tar using base64 (default if base64 detected)
     --uuencode         : Encode tar using uuencode (default if base64 not detected)
@@ -71,6 +73,7 @@ HEADER=`dirname "$0"`/nshar-header.sh
 TARGETDIR=""
 DATE=`LC_ALL=C date`
 ENCODE=base64
+TAR_EXTRA=
 __EOF_MARK__=__END_OF_ARCHIVE__
 
 while true
@@ -96,6 +99,16 @@ do
 	COMPRESS=Unix
 	shift
 	;;
+	--exclude)
+	shift
+	TAR_EXTRA="--exclude $1 $TAR_EXTRA"
+	shift
+	;;
+	--tar-extra)
+	shift
+	TAR_EXTRA="$1"
+	shift
+	;;
     --base64)
 	ENCODE=base64
 	shift
@@ -112,18 +125,26 @@ do
 	COMPRESS=none
 	shift
 	;;
-    -q | --quiet)
+	--verbose|-v)
+	VERBOSE=y
+	shift
+	;;
+	-q | --quiet)
 	QUIET=y
 	shift
 	;;
     -h | --help)
 	usage
 	;;
+	--)
+	shift
+	break
+	;;
     -*|--*)
-	echo Unrecognized flag : "$1"
+	echo Unrecognized flag : "$1" >&2
 	usage
 	;;
-    --|*)
+	*)
 	break
 	;;
     esac

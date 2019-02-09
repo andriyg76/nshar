@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SUT=$(realpath "$(dirname "$0")/../makeself.sh")
+SUT=$(realpath $(dirname $0)/../nshar.sh)
 
 setupTests() {
   temp=$(mktemp -d -t XXXXX)
@@ -18,11 +18,11 @@ testTarExtraOpts() {
   setupTests
 
   tar_extra="--verbose --exclude .git"
-  ${SUT} --tar-extra "$tar_extra" src src.sh alabel startup.sh
+  ${SUT} $tar_extra src > src.sh
 
   assertEqual $? 0
 
   tearDown
 }
 
-source bashunit/bashunit.bash
+source $(realpath $(dirname $0))/bashunit/bashunit.bash

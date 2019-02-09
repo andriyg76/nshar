@@ -1,49 +1,47 @@
 #!/bin/bash
 
-SUT=$(realpath $(dirname $0)/../makeself.sh)
-SOURCE=$(realpath ..)
+SUT=$(realpath $(dirname $0)/../nshar.sh)
+SOURCE=$(dirname $SUT)
 
 setupTests() {
   temp=`mktemp -d -t XXXXX`
   cd "$temp"
   mkdir archive
   cp -a $SOURCE archive/ 
-  $SUT $* archive makeself-test.run "Test $*" echo Testing
+  $SUT $* -- archive > nshar-test.run && chmod +x nshar-test.run
 }
 
 
 testQuiet()
 {
-  setupTests
+  setupTests  --exclude .git
 
-  ./makeself-test.run --quiet
+  ./nshar-test.run --quiet
   assertEqual $? 0
 }
 
 testGzip()
 {
-  setupTests --gzip
+  setupTests --gzip --exclude .git
   
-  ./makeself-test.run --check
+  ./nshar-test.run --list
+  assertEqual $? 0
+}
+
+testCompress()
+{
+  setupTests --compress --exclude .git
+
+  ./nshar-test.run --list
   assertEqual $? 0
 }
 
 testBzip2()
 {
-  setupTests --bzip2
+  setupTests --bzip2 --exclude .git
   
-  ./makeself-test.run --check
+  ./nshar-test.run --list
   assertEqual $? 0
 }
 
-testPBzip2()
-{
-  setupTests --pbzip2
-
-  ./makeself-test.run --check
-  assertEqual $? 0
-}
-
-
-source bashunit/bashunit.bash
-
+source $(realpath $(dirname $0))/bashunit/bashunit.bash
