@@ -1,8 +1,8 @@
 #!/bin/bash
 
-THIS="$(readlink -f "$0")"
+THIS="$(realpath "$0")"
 HERE="$(dirname "${THIS}")"
-SUT="$(dirname "${HERE}")/makeself.sh"
+SUT=$(realpath $(dirname $0)/../nshar.sh)
 
 testWhiteSpace() {
     local archive_dir="$(mktemp -dt archive_dir.XXXXXX)"
@@ -15,9 +15,9 @@ testWhiteSpace() {
         touch "$(printf "_\x20_space:.txt")"
     )
     local file_name="$(mktemp -t file_name.XXXXXX)"
-    "${SUT}" "${archive_dir}" "${file_name}" "white space test" "ls -lah ."
+    "${SUT}" "${archive_dir}" > "${file_name}"
     assertEqual $? 0
     rm -rf "${archive_dir}" "${file_name}"
 }
 
-source "${HERE}/bashunit/bashunit.bash"
+source $(realpath $(dirname $0))/bashunit/bashunit.bash
