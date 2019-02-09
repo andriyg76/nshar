@@ -5,10 +5,8 @@ before_install:
 script:
 - ./make-release.sh
 - cd test
-- "./datetest"
 - "./extracttest"
 - "./tarextratest"
-- "./appendtest"
 - "./whitespacetest"
 - cd ..
 deploy:
@@ -16,7 +14,7 @@ deploy:
   api_key:
     secure: --
   file_glob: true
-  file: makeself-*.run
+  file: nshar-*.shar
   skip_cleanup: true
   on:
     repo: andriyg76/nshar
